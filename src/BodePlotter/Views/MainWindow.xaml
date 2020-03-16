@@ -1,0 +1,70 @@
+﻿<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:c="clr-namespace:BodePlotter.Controls;assembly=BodePlotter"
+        xmlns:oxy="http://oxyplot.org/avalonia"
+        x:Class="BodePlotter.Views.MainWindow"
+        Title="Bode Plotter">
+
+    <DockPanel Margin="8">
+
+        <DockPanel DockPanel.Dock="Top">
+
+            <Button DockPanel.Dock="Bottom"
+                    Command="{Binding PlotCommand}"
+                    Content="Plot" />
+
+            <Grid ColumnDefinitions="*,8,*">
+
+                <StackPanel Grid.Column="0"
+                            Margin="0,0,0,8"
+                            Spacing="8">
+
+                    <DockPanel Margin="0,0,8,0">
+
+                        <TextBlock DockPanel.Dock="Left"
+                                   Margin="0,0,8,0"
+                                   FontSize="24"
+                                   Text="H(s) = " />
+
+                        <TextBox FontSize="24"
+                                 Text="{Binding TransferFunctionInput}" />
+
+                    </DockPanel>
+
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock VerticalAlignment="Center"
+                                   Text="From (Hz): " />
+                        <NumericUpDown Maximum="{Binding ToFrequency}"
+                                       Value="{Binding FromFrequency}" />
+                    </StackPanel>
+
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock VerticalAlignment="Center"
+                                   Text="To (Hz): " />
+                        <NumericUpDown Minimum="{Binding FromFrequency}"
+                                       Value="{Binding ToFrequency}" />
+                    </StackPanel>
+
+                </StackPanel>
+
+                <c:CSharpMathSkiaBlock Grid.Column="2"
+                                       Source="{Binding TransferFunction}" />
+
+            </Grid>
+
+        </DockPanel>
+
+        <Grid ColumnDefinitions="*,*">
+
+            <oxy:PlotView Grid.Column="0"
+                          Model="{Binding MagnitudePlot}" />
+
+            <oxy:PlotView Grid.Column="1"
+                          Model="{Binding PhasePlot}" />
+
+        </Grid>
+
+    </DockPanel>
+
+</Window>
