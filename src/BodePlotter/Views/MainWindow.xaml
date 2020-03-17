@@ -4,6 +4,7 @@
         xmlns:c="clr-namespace:BodePlotter.Controls;assembly=BodePlotter"
         xmlns:oxy="http://oxyplot.org/avalonia"
         x:Class="BodePlotter.Views.MainWindow"
+        Icon="/Resources/Icon.ico"
         Title="Bode Plotter">
 
     <DockPanel Margin="8">
