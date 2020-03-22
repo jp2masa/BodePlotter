@@ -18,8 +18,8 @@ namespace BodePlotter.ViewModels
         private string _function;
         private string _input;
 
-        private int _fromFrequency = 0;
-        private int _toFrequency = 10000;
+        private double _fromFrequency = 0.01;
+        private double _toFrequency = 1000000;
 
         public MainWindowViewModel(Expr s)
         {
@@ -29,15 +29,15 @@ namespace BodePlotter.ViewModels
 
             MagnitudePlot = new PlotModel { Title = "Magnitude" };
 
-            MagnitudePlot.Axes.Add(new LogarithmicAxis() { Position = AxisPosition.Bottom, Unit = "Hz" });
-            MagnitudePlot.Axes.Add(new LinearAxis() { Position = AxisPosition.Left, Unit = "dB" });
+            MagnitudePlot.Axes.Add(CreateFrequencyAxis(AxisPosition.Bottom));
+            MagnitudePlot.Axes.Add(InitializeAxis(new LinearAxis() { Position = AxisPosition.Left, Title = "|H(s)|", Unit = "dB", AxisTitleDistance = 32 }));
 
             MagnitudePlot.Series.Add(new LineSeries());
 
             PhasePlot = new PlotModel { Title = "Phase" };
 
-            PhasePlot.Axes.Add(new LogarithmicAxis() { Position = AxisPosition.Bottom, Unit = "Hz" });
-            PhasePlot.Axes.Add(new LinearAxis() { Position = AxisPosition.Left, Unit = "º", Minimum = -180, Maximum = 180, MajorStep = 30 });
+            PhasePlot.Axes.Add(CreateFrequencyAxis(AxisPosition.Bottom));
+            PhasePlot.Axes.Add(InitializeAxis(new LinearAxis() { Position = AxisPosition.Left, Title = "/_ H(s)", Unit = "°", Minimum = -180, Maximum = 180, MajorStep = 45, AxisTitleDistance = 32 }));
 
             PhasePlot.Series.Add(new LineSeries());
         }
@@ -54,13 +54,13 @@ namespace BodePlotter.ViewModels
             set => this.RaiseAndSetIfChanged(ref _input, value);
         }
 
-        public int FromFrequency
+        public double FromFrequency
         {
             get => _fromFrequency;
             set => this.RaiseAndSetIfChanged(ref _fromFrequency, value);
         }
 
-        public int ToFrequency
+        public double ToFrequency
         {
             get => _toFrequency;
             set => this.RaiseAndSetIfChanged(ref _toFrequency, value);
@@ -92,7 +92,7 @@ namespace BodePlotter.ViewModels
             }
         }
 
-        private (LineSeries magnitude, LineSeries phase) PlotImpl(Expr H, int from, int to)
+        private (LineSeries magnitude, LineSeries phase) PlotImpl(Expr H, double from, double to)
         {
             var h = H.CompileComplex(_s.VariableName);
 
@@ -101,19 +101,40 @@ namespace BodePlotter.ViewModels
 
             var n = 100;
 
-            var df = to - from;
+            var df = to / from;
             var log = Math.Log10(df);
 
-            for (int i = 0; i <= 100; i++)
+            for (int i = 0; i <= n; i++)
             {
-                var f = from + Math.Pow(10, i * log / n);
+                var f = from * Math.Pow(10, i * log / n);
                 var c = h(new System.Numerics.Complex(0, 2 * Math.PI * f));
 
-                magnitude.Points.Add(new DataPoint(f, 10 * Math.Log10(c.Real * c.Real + c.Imaginary * c.Imaginary)));
+                magnitude.Points.Add(new DataPoint(f, 10 * Math.Log10(c.MagnitudeSquared())));
                 phase.Points.Add(new DataPoint(f, c.Phase * 180 / Math.PI));
             }
 
             return (magnitude, phase);
+        }
+
+        private static LogarithmicAxis CreateFrequencyAxis(AxisPosition position) =>
+            InitializeAxis(
+                new LogarithmicAxis()
+                {
+                    Position = position,
+                    Title = "f",
+                    Unit = "Hz",
+                    UseSuperExponentialFormat = true
+                }
+            );
+
+        private static T InitializeAxis<T>(T axis)
+            where T : Axis
+        {
+            axis.FontSize = 14;
+            axis.TitlePosition = 0.95;
+            axis.TitleFormatString = "{0} ({1})";
+
+            return axis;
         }
     }
 }
