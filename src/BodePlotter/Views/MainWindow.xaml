@@ -50,11 +50,11 @@
 
                 </StackPanel>
 
-                <math:MathBlock Grid.Column="2"
-                                FontSize="20"
-                                HorizontalAlignment="Left"
-                                VerticalAlignment="Top"
-                                Text="{Binding TransferFunction}" />
+                <math:MathView Grid.Column="2"
+                               FontSize="20"
+                               HorizontalAlignment="Left"
+                               VerticalAlignment="Top"
+                               Content="{Binding TransferFunction}" />
 
             </Grid>
 

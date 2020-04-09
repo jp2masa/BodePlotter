@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Windows.Input;
 
+using CSharpMath.Atom;
+
 using Expr = MathNet.Symbolics.SymbolicExpression;
 
 using OxyPlot;
@@ -15,7 +17,7 @@ namespace BodePlotter.ViewModels
     {
         private readonly Expr _s;
 
-        private string _function;
+        private MathList _function;
         private string _input;
 
         private double _fromFrequency = 0.01;
@@ -42,7 +44,7 @@ namespace BodePlotter.ViewModels
             PhasePlot.Series.Add(new LineSeries());
         }
 
-        public string TransferFunction
+        public MathList TransferFunction
         {
             get => _function;
             private set => this.RaiseAndSetIfChanged(ref _function, value);
@@ -77,7 +79,7 @@ namespace BodePlotter.ViewModels
             try
             {
                 var H = Expr.Parse(TransferFunctionInput);
-                TransferFunction = "H(s) = " + H.ToLaTeX();
+                TransferFunction = LaTeXParser.MathListFromLaTeX("H(s) = " + H.ToLaTeX());
 
                 var (magnitude, phase) = PlotImpl(H, FromFrequency, ToFrequency);
 
