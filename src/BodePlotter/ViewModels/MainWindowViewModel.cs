@@ -79,7 +79,7 @@ namespace BodePlotter.ViewModels
             try
             {
                 var H = Expr.Parse(TransferFunctionInput);
-                TransferFunction = LaTeXParser.MathListFromLaTeX("H(s) = " + H.ToLaTeX());
+                TransferFunction = LaTeXParser.MathListFromLaTeX("H(s) = " + H.ToLaTeX()).Match(m => m, e => throw new Exception(e));
 
                 var (magnitude, phase) = PlotImpl(H, FromFrequency, ToFrequency);
 
