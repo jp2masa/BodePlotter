@@ -34,19 +34,36 @@
 
                     </DockPanel>
 
-                    <StackPanel Orientation="Horizontal">
-                        <TextBlock VerticalAlignment="Center"
-                                   Text="From (Hz): " />
-                        <NumericUpDown Maximum="{Binding ToFrequency}"
-                                       Value="{Binding FromFrequency}" />
-                    </StackPanel>
+                    <WrapPanel Margin="0,0,-8,-8">
 
-                    <StackPanel Orientation="Horizontal">
-                        <TextBlock VerticalAlignment="Center"
-                                   Text="To (Hz): " />
-                        <NumericUpDown Minimum="{Binding FromFrequency}"
-                                       Value="{Binding ToFrequency}" />
-                    </StackPanel>
+                        <StackPanel Orientation="Horizontal"
+                                    Margin="0,0,8,8">
+                            <TextBlock VerticalAlignment="Center"
+                                       Text="From: " />
+                            <NumericUpDown Maximum="{Binding ToFrequency}"
+                                           Value="{Binding FromFrequency}" />
+                        </StackPanel>
+
+                        <StackPanel Orientation="Horizontal"
+                                    Margin="0,0,8,8">
+                            <TextBlock VerticalAlignment="Center"
+                                       Text="To: " />
+                            <NumericUpDown Minimum="{Binding FromFrequency}"
+                                           Value="{Binding ToFrequency}" />
+                        </StackPanel>
+
+                        <StackPanel Orientation="Horizontal"
+                                    Margin="0,0,8,8"
+                                    Spacing="8">
+                            <RadioButton IsChecked="{Binding IsHz}">
+                                <math:MathView FontSize="12">{Hz}</math:MathView>
+                            </RadioButton>
+                            <RadioButton IsChecked="{Binding IsRadS}">
+                                <math:MathView FontSize="12">{rad}/{s}</math:MathView>
+                            </RadioButton>
+                        </StackPanel>
+
+                    </WrapPanel>
 
                 </StackPanel>
 

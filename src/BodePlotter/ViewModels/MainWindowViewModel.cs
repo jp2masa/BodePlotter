@@ -17,11 +17,17 @@ namespace BodePlotter.ViewModels
     {
         private readonly Expr _s;
 
+        private readonly LogarithmicAxis _magnitudeFrequencyAxis;
+        private readonly LogarithmicAxis _phaseFrequencyAxis;
+
         private MathList _function;
         private string _input;
 
         private double _fromFrequency = 0.01;
         private double _toFrequency = 1000000;
+
+        private bool _isHz = true;
+        private bool _isRadS;
 
         public MainWindowViewModel(Expr s)
         {
@@ -31,14 +37,18 @@ namespace BodePlotter.ViewModels
 
             MagnitudePlot = new PlotModel { Title = "Magnitude" };
 
-            MagnitudePlot.Axes.Add(CreateFrequencyAxis(AxisPosition.Bottom));
+            _magnitudeFrequencyAxis = CreateFrequencyAxis(AxisPosition.Bottom);
+
+            MagnitudePlot.Axes.Add(_magnitudeFrequencyAxis);
             MagnitudePlot.Axes.Add(InitializeAxis(new LinearAxis() { Position = AxisPosition.Left, Title = "|H(s)|", Unit = "dB", AxisTitleDistance = 32 }));
 
             MagnitudePlot.Series.Add(new LineSeries());
 
             PhasePlot = new PlotModel { Title = "Phase" };
 
-            PhasePlot.Axes.Add(CreateFrequencyAxis(AxisPosition.Bottom));
+            _phaseFrequencyAxis = CreateFrequencyAxis(AxisPosition.Bottom);
+
+            PhasePlot.Axes.Add(_phaseFrequencyAxis);
             PhasePlot.Axes.Add(InitializeAxis(new LinearAxis() { Position = AxisPosition.Left, Title = "/_ H(s)", Unit = "°", Minimum = -180, Maximum = 180, MajorStep = 45, AxisTitleDistance = 32 }));
 
             PhasePlot.Series.Add(new LineSeries());
@@ -66,6 +76,18 @@ namespace BodePlotter.ViewModels
         {
             get => _toFrequency;
             set => this.RaiseAndSetIfChanged(ref _toFrequency, value);
+        }
+
+        public bool IsHz
+        {
+            get => _isHz;
+            set => this.RaiseAndSetIfChanged(ref _isHz, value);
+        }
+
+        public bool IsRadS
+        {
+            get => _isRadS;
+            set => this.RaiseAndSetIfChanged(ref _isRadS, value);
         }
 
         public ICommand PlotCommand { get; }
@@ -98,6 +120,9 @@ namespace BodePlotter.ViewModels
         {
             var h = H.CompileComplex(_s.VariableName);
 
+            _phaseFrequencyAxis.Title = _magnitudeFrequencyAxis.Title = IsRadS ? "ω" : "f";
+            _phaseFrequencyAxis.Unit = _magnitudeFrequencyAxis.Unit = IsRadS ? "rad/s" : "Hz";
+
             var magnitude = new LineSeries();
             var phase = new LineSeries();
 
@@ -109,7 +134,7 @@ namespace BodePlotter.ViewModels
             for (int i = 0; i <= n; i++)
             {
                 var f = from * Math.Pow(10, i * log / n);
-                var c = h(new System.Numerics.Complex(0, 2 * Math.PI * f));
+                var c = h(new System.Numerics.Complex(0, IsRadS ? f : (2 * Math.PI * f)));
 
                 magnitude.Points.Add(new DataPoint(f, 10 * Math.Log10(c.MagnitudeSquared())));
                 phase.Points.Add(new DataPoint(f, c.Phase * 180 / Math.PI));
