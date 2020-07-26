@@ -6,6 +6,10 @@
         <ApplicationIcon>Resources\Icon.ico</ApplicationIcon>
     </PropertyGroup>
 
+    <PropertyGroup>
+        <AvaloniaVersion>0.10.0-preview2</AvaloniaVersion>
+    </PropertyGroup>
+
     <ItemGroup>
         <Compile Update="**\*.xaml.cs" DependentUpon="%(Filename)" />
         <AvaloniaResource Include="**\*.xaml" SubType="Designer" />
@@ -13,16 +17,21 @@
     </ItemGroup>
 
     <ItemGroup>
-        <PackageReference Include="Avalonia" Version="0.9.11" />
-        <PackageReference Include="Avalonia.Desktop" Version="0.9.11" />
-        <PackageReference Include="Avalonia.ReactiveUI" Version="0.9.11" />
-        <PackageReference Include="CSharpMath.Avalonia" Version="0.4.2" />
+        <PackageReference Include="Avalonia" Version="$(AvaloniaVersion)" />
+        <PackageReference Include="Avalonia.Desktop" Version="$(AvaloniaVersion)" />
+        <PackageReference Include="Avalonia.ReactiveUI" Version="$(AvaloniaVersion)" />
+        <PackageReference Include="CSharpMath.Avalonia" Version="0.4.2-ci-ab9f87c72d88eba908f94bd76a4754eef6d1e009" />
+        <PackageReference Include="OxyPlot.Avalonia" Version="2.1.0-20200725.1" />
         <PackageReference Include="MathNet.Symbolics" Version="0.21.0" />
         <PackageReference Include="ReactiveUI" Version="11.4.17" />
     </ItemGroup>
 
-    <ItemGroup>
-        <ProjectReference Include="..\..\external\oxyplot-avalonia\Source\OxyPlot.Avalonia\OxyPlot.Avalonia.csproj" />
-    </ItemGroup>
+    <Choose>
+        <When Condition="'$(Configuration)' == 'Debug'">
+            <ItemGroup>
+                <PackageReference Include="Avalonia.Diagnostics" Version="$(AvaloniaVersion)" />
+            </ItemGroup>
+        </When>
+    </Choose>
 
 </Project>

@@ -7,12 +7,24 @@
         x:Class="BodePlotter.Views.MainWindow"
         Icon="/Resources/Icon.ico"
         Title="Bode Plotter">
+    <Window.Styles>
+        <Style Selector="RadioButton">
+            <Setter Property="MinWidth" Value="0" />
+            <Setter Property="Padding" Value="4,0,0,0" />
+            <Setter Property="VerticalContentAlignment" Value="Center" />
+        </Style>
+        <Style Selector="NumericUpDown">
+            <Setter Property="Width" Value="160" />
+        </Style>
+    </Window.Styles>
 
     <DockPanel Margin="8">
 
         <DockPanel DockPanel.Dock="Top">
 
             <Button DockPanel.Dock="Bottom"
+                    HorizontalAlignment="Stretch"
+                    HorizontalContentAlignment="Center"
                     Command="{Binding PlotCommand}"
                     Content="Plot" />
 
@@ -26,6 +38,7 @@
 
                         <TextBlock DockPanel.Dock="Left"
                                    Margin="0,0,8,0"
+                                   VerticalAlignment="Center"
                                    FontSize="24"
                                    Text="H(s) = " />
 
@@ -34,10 +47,11 @@
 
                     </DockPanel>
 
-                    <WrapPanel Margin="0,0,-8,-8">
+                    <WrapPanel Margin="0,0,-16,-16">
 
                         <StackPanel Orientation="Horizontal"
-                                    Margin="0,0,8,8">
+                                    Margin="0,0,16,16"
+                                    Spacing="4">
                             <TextBlock VerticalAlignment="Center"
                                        Text="From: " />
                             <NumericUpDown Maximum="{Binding ToFrequency}"
@@ -45,7 +59,8 @@
                         </StackPanel>
 
                         <StackPanel Orientation="Horizontal"
-                                    Margin="0,0,8,8">
+                                    Margin="0,0,16,16"
+                                    Spacing="4">
                             <TextBlock VerticalAlignment="Center"
                                        Text="To: " />
                             <NumericUpDown Minimum="{Binding FromFrequency}"
@@ -53,7 +68,7 @@
                         </StackPanel>
 
                         <StackPanel Orientation="Horizontal"
-                                    Margin="0,0,8,8"
+                                    Margin="0,0,16,16"
                                     Spacing="8">
                             <RadioButton IsChecked="{Binding IsHz}">
                                 <math:MathView FontSize="12">{Hz}</math:MathView>
