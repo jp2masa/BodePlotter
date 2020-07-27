@@ -3,6 +3,7 @@ using System.Windows.Input;
 
 using CSharpMath.Atom;
 
+using MathNet.Numerics;
 using Expr = MathNet.Symbolics.SymbolicExpression;
 
 using OxyPlot;
