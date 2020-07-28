@@ -1,13 +1,17 @@
 <Window xmlns="https://github.com/avaloniaui"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:c="clr-namespace:BodePlotter.Controls;assembly=BodePlotter"
         xmlns:math="clr-namespace:CSharpMath.Avalonia;assembly=CSharpMath.Avalonia"
         xmlns:oxy="http://oxyplot.org/avalonia"
         x:Class="BodePlotter.Views.MainWindow"
         Icon="/Resources/Icon.ico"
         Title="Bode Plotter">
     <Window.Styles>
+        <Style Selector="CheckBox">
+            <Setter Property="MinWidth" Value="0" />
+            <Setter Property="Padding" Value="4,0,0,0" />
+            <Setter Property="VerticalContentAlignment" Value="Center" />
+        </Style>
         <Style Selector="RadioButton">
             <Setter Property="MinWidth" Value="0" />
             <Setter Property="Padding" Value="4,0,0,0" />
@@ -25,8 +29,8 @@
             <Button DockPanel.Dock="Bottom"
                     HorizontalAlignment="Stretch"
                     HorizontalContentAlignment="Center"
-                    Command="{Binding PlotCommand}"
-                    Content="Plot" />
+                    Content="Plot"
+                    Command="{Binding PlotCommand}" />
 
             <Grid ColumnDefinitions="*,8,*">
 
@@ -47,10 +51,10 @@
 
                     </DockPanel>
 
-                    <WrapPanel Margin="0,0,-16,-16">
+                    <WrapPanel Margin="0,0,-16,-8">
 
                         <StackPanel Orientation="Horizontal"
-                                    Margin="0,0,16,16"
+                                    Margin="0,0,16,8"
                                     Spacing="4">
                             <TextBlock VerticalAlignment="Center"
                                        Text="From: " />
@@ -59,7 +63,7 @@
                         </StackPanel>
 
                         <StackPanel Orientation="Horizontal"
-                                    Margin="0,0,16,16"
+                                    Margin="0,0,16,8"
                                     Spacing="4">
                             <TextBlock VerticalAlignment="Center"
                                        Text="To: " />
@@ -68,7 +72,7 @@
                         </StackPanel>
 
                         <StackPanel Orientation="Horizontal"
-                                    Margin="0,0,16,16"
+                                    Margin="0,0,16,8"
                                     Spacing="8">
                             <RadioButton IsChecked="{Binding IsHz}">
                                 <math:MathView FontSize="12">{Hz}</math:MathView>
@@ -77,6 +81,11 @@
                                 <math:MathView FontSize="12">{rad}/{s}</math:MathView>
                             </RadioButton>
                         </StackPanel>
+
+                        <CheckBox Margin="0,0,16,8"
+                                  VerticalAlignment="Top"
+                                  IsChecked="{Binding IsStacked}"
+                                  Content="Stacked" />
 
                     </WrapPanel>
 
@@ -92,15 +101,33 @@
 
         </DockPanel>
 
-        <Grid ColumnDefinitions="*,*">
+        <Panel>
+            <Panel.Resources>
+                <ContextMenu x:Key="PlotContextMenu">
+                    <MenuItem Header="Reset View"
+                              Command="{Binding ResetViewCommand}" />
+                </ContextMenu>
+            </Panel.Resources>
+
+            <Grid ColumnDefinitions="*,*"
+                  IsVisible="{Binding !IsEffectivelyStacked}">
+
+                <oxy:PlotView Grid.Column="0"
+                              ContextMenu="{StaticResource PlotContextMenu}"
+                              Model="{Binding MagnitudePlot}" />
+
+                <oxy:PlotView Grid.Column="1"
+                              ContextMenu="{StaticResource PlotContextMenu}"
+                              Model="{Binding PhasePlot}" />
+
+            </Grid>
 
             <oxy:PlotView Grid.Column="0"
-                          Model="{Binding MagnitudePlot}" />
+                          IsVisible="{Binding IsEffectivelyStacked}"
+                          ContextMenu="{StaticResource PlotContextMenu}"
+                          Model="{Binding BodePlot}" />
 
-            <oxy:PlotView Grid.Column="1"
-                          Model="{Binding PhasePlot}" />
-
-        </Grid>
+        </Panel>
 
     </DockPanel>
 
