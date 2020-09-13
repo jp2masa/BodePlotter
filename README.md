@@ -1,6 +1,6 @@
 # BodePlotter
 
-![dotnet-properties](Icon.png)
+![BodePlotter](Icon.png)
 
 BodePlotter is a cross-platform Bode plotter.
 
