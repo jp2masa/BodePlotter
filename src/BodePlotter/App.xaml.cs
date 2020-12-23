@@ -38,6 +38,6 @@ namespace BodePlotter
                       .UseSkia()
                       .UsePlatformDetect()
                       .UseReactiveUI()
-                      .LogToDebug();
+                      .LogToTrace();
     }
 }
