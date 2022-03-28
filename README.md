@@ -6,16 +6,10 @@ BodePlotter is a cross-platform Bode plotter.
 
 ## Building
 
-#### 1. Clone repo with submodules:
+#### 1. Clone repo:
 
 ```
-git clone https://github.com/jp2masa/BodePlotter.git --recursive
-```
-
-If repo was cloned without submodules:
-
-```
-git submodule update --init --recursive
+git clone https://github.com/jp2masa/BodePlotter.git
 ```
 
 #### 2. Either:
